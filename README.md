@@ -1,166 +1,242 @@
 # 🤖 PARTICLE INHAND
 
-**Real-time 3D Interactive Particle System Based on Gesture Recognition**  
-*Open your palm to spread particles, pinch fingers to gather particles*
-
-[📖 User Guide](#user-guide) • [🎯 Features](#features)
-
----
-
-## ✨ Project Introduction
-
-This is an innovative 3D particle interaction system that combines advanced computer vision technology and 3D rendering technology. Through MediaPipe gesture recognition, users can control the behavior of 15,000 particles in real-time with gestures, creating stunning visual effects.
-
-### 🎬 Screenshots
-
 <div align="center">
 
-**Main Interface**  
-<img src="screenshot/2026-01-09_2135004.png" alt="Particle System Main Interface" width="600">
+**基于手势识别的实时3D交互系统**  
+*张开手掌扩散粒子，捏合手指聚集粒子*
 
-<p><em>Main interface showing particle controls and gesture recognition status</em></p>
+[![GitHub stars](https://img.shields.io/github/stars/oscarwang164/particle-inhand?style=for-the-badge)](https://github.com/oscarwang164/particle-inhand/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/oscarwang164/particle-inhand?style=for-the-badge)](https://github.com/oscarwang164/particle-inhand/network)
+[![MIT License](https://img.shields.io/github/license/oscarwang164/particle-inhand?style=for-the-badge)](LICENSE)
 
-**Particle Animation**  
-<img src="screenshot/2026-01-09_2134002.png" alt="Particle Animation Effect" width="600">
-
-<p><em>Real-time particle animation with gesture control</em></p>
+[📖 使用指南](#使用指南) • [🎯 功能特性](#功能特性) • [🚀 快速开始](#快速开始)
 
 </div>
 
-## 🚀 Quick Start
+---
 
-### System Requirements
+## 📋 目录
 
-- **Browser**: Chrome 88+, Firefox 85+, Safari 14+
-- **Hardware**: Modern graphics card supporting WebGL
-- **Permissions**: Camera access permissions (for gesture recognition)
-- **Network**: HTTPS or localhost environment
+- [✨ 项目简介](#项目简介)
+- [🎬 截图展示](#截图展示)
+- [🚀 快速开始](#快速开始)
+- [🎮 使用指南](#使用指南)
+- [🎯 功能特性](#功能特性)
+- [🛠️ 技术栈](#技术栈)
+- [🎨 视觉设计](#视觉设计)
+- [🔧 开发与部署](#开发与部署)
+- [📄 许可证](#许可证)
+- [🙏 致谢](#致谢)
+- [📞 联系方式](#联系方式)
 
-### Running the Project
+---
+
+## ✨ 项目简介
+
+这是一个创新的3D粒子交互系统，结合了先进的计算机视觉技术和3D渲染技术。通过MediaPipe手势识别，用户可以用手势实时控制15,000个粒子的行为，创造出令人惊叹的视觉效果。
+
+### 核心特性
+
+- ✋ **手势控制** - 实时手势追踪，粒子随手势动态响应
+- 🎨 **6种粒子模型** - 爱心、土星、花朵、烟花、蝴蝶、火焰
+- 🚀 **高性能渲染** - 60fps流畅运行15,000个粒子
+- 🌟 **科幻视觉效果** - 未来感UI设计，炫酷光影特效
+
+---
+
+## 🎬 截图展示
+
+<div align="center">
+
+**主界面**
+<img src="screenshot/2026-01-09_2135004.png" alt="粒子系统主界面" width="600">
+
+<p><em>主界面显示粒子控制面板和手势识别状态</em></p>
+
+**粒子动画**
+<img src="screenshot/2026-01-09_2134002.png" alt="粒子动画效果" width="600">
+
+<p><em>实时粒子动画与手势控制效果</em></p>
+
+</div>
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+
+| 要求 | 说明 |
+|------|------|
+| **浏览器** | Chrome 88+, Firefox 85+, Safari 14+ |
+| **硬件** | 支持WebGL的现代显卡 |
+| **权限** | 摄像头访问权限 (用于手势识别) |
+| **网络** | HTTPS或localhost环境 |
+
+### 运行项目
 
 ```bash
-# Method 1: Open directly in browser
-# Double-click index.html or drag it into the browser window
+# 方式1: 直接在浏览器中打开
+# 双击 index.html 或拖拽到浏览器窗口
 
-# Method 2: Use local server (recommended)
+# 方式2: 使用本地服务器 (推荐)
 # Python 3
 python -m http.server 8000
 
-# Node.js (requires http-server)
+# Node.js (需要安装 http-server)
 npx http-server
 
-# Then visit http://localhost:8000 in your browser
+# 然后在浏览器中访问 http://localhost:8000
 ```
 
-### 🎮 User Guide
+---
 
-#### Gesture Control
+## 🎮 使用指南
 
-| Gesture                    | Effect                     | Icon |
-| -------------------------- | -------------------------- | ---- |
-| 🖐️ Open Palm              | Spread Particles           | 🔄   |
-| 🤏 Pinch Fingers           | Gather Particles           | 🎯   |
-| 👉 Move Left/Right         | Control Rotation Direction | ↻    |
-| ⚡ Quick Open/Close 3 Times | Trigger Easter Egg         | 🎉   |
+### 手势控制
 
-#### Mouse Control
+| 手势 | 效果 | 图标 |
+|------|------|------|
+| 🖐️ 张开手掌 | 粒子扩散 | 🔄 |
+| 🤏 捏合手指 | 粒子聚集 | 🎯 |
+| 👉 左右移动 | 控制旋转方向 | ↻ |
+| ⚡ 快速开合3次 | 触发彩蛋效果 | 🎉 |
 
-- **Left Click Drag**: Rotate particle view
-- **Scroll Wheel**: Zoom particle size
+### 鼠标控制
 
-#### Panel Control
+- **左键拖动**: 旋转粒子视角
+- **滚轮滚动**: 缩放粒子大小
 
-- **Model Selection**: Switch between 6 particle shapes
-- **Color Adjustment**: Real-time particle color adjustment
-- **Size Adjustment**: Control particle size (0.01-0.3)
+### 面板控制
 
-## 🎯 Features
+- **模型选择**: 切换6种粒子形状
+- **颜色调节**: 实时调整粒子颜色
+- **大小调节**: 控制粒子尺寸 (0.01-0.3)
 
-### 🌟 Core Features
+---
 
-- **🎨 6 Particle Models**
-  
-  - ❤️ Heart (Heart-shaped parametric equation)
-  - 🪐 Saturn (Sphere + rotating ring)
-  - 🌸 Flower (Rose line equation)
-  - 🎆 Fireworks (Spherical explosion effect)
-  - 🦋 Butterfly (Butterfly curve)
-  - 🔥 Flame (Dense bottom diffusion)
+## 🎯 功能特性
 
-- **👋 Gesture Recognition System**
-  
-  - Real-time MediaPipe gesture tracking
-  - Smooth particle response animation
-  - Intelligent easter egg trigger mechanism
+### 🌟 核心功能
 
-- **🎮 Interactive Control**
-  
-  - Mouse drag rotation
-  - Scroll wheel zoom control
-  - Real-time parameter adjustment
+#### 6种粒子模型
 
-### ⚡ Technical Highlights
+| 模型 | 描述 |
+|------|------|
+| ❤️ 爱心 | 心形参数方程 |
+| 🪐 土星 | 球体+旋转环 |
+| 🌸 花朵 | 玫瑰线方程 |
+| 🎆 烟花 | 球形爆炸效果 |
+| 🦋 蝴蝶 | 蝴蝶曲线 |
+| 🔥 火焰 | 底部密集扩散 |
 
-- **🚀 High-Performance Rendering**: 15,000 particles at 60fps real-time rendering
-- **🎨 Visual Effects**: Additive blending glow effects
-- **🔧 Modular Architecture**: Clear code organization structure
-- **📱 Responsive Design**: Adaptive to different screen sizes
-- **🛡️ Error Handling**: Comprehensive exception handling mechanism
+#### 手势识别系统
 
-## 🛠️ Technology Stack
+- 实时MediaPipe手势追踪
+- 流畅的粒子响应动画
+- 智能彩蛋触发机制
 
-- **Frontend Framework**: Native HTML5/CSS3/JavaScript (ES6+)
-- **3D Rendering**: Three.js r128
-- **Gesture Recognition**: MediaPipe Hands API
-- **Style Design**: Sci-fi themed custom CSS
-- **Fonts**: Orbitron (Google Fonts)
+#### 交互控制
 
-## 🎨 Visual Design
+- 鼠标拖拽旋转
+- 滚轮缩放控制
+- 实时参数调节
 
-### Sci-fi Theme
+### ⚡ 技术亮点
 
-- **Color Scheme**: Cyan (#00FFFF) tech-inspired colors
-- **Background Effects**: 3D cosmic grid + dynamic halos
-- **Animation Effects**: Smooth particle transition animations
-- **UI Design**: Futuristic control panels
+- 🚀 **高性能渲染**: 15,000粒子60fps实时渲染
+- 🎨 **视觉特效**: 加法混合发光效果
+- 🔧 **模块化架构**: 清晰的代码组织结构
+- 📱 **响应式设计**: 自适应不同屏幕尺寸
+- 🛡️ **错误处理**: 完善的异常处理机制
 
-### Performance Optimization
+---
 
-- **LOD System**: Distance culling optimization
-- **Memory Management**: Efficient object lifecycle
-- **Rendering Optimization**: Throttling and debouncing techniques
+## 🛠️ 技术栈
 
-## 🔧 Development & Deployment
+<div align="center">
 
-### Development Environment
+| 技术 | 用途 |
+|------|------|
+| HTML5/CSS3/JavaScript (ES6+) | 前端框架 |
+| Three.js r128 | 3D渲染 |
+| MediaPipe Hands API | 手势识别 |
+| 自定义CSS | 样式设计 |
+| Orbitron (Google Fonts) | 字体 |
+
+</div>
+
+---
+
+## 🎨 视觉设计
+
+### 科幻主题
+
+- **色彩方案**: 青色(#00FFFF)科技感配色
+- **背景效果**: 三维宇宙网格 + 动态光晕
+- **动画效果**: 流畅的粒子过渡动画
+- **UI设计**: 未来感控制面板
+
+### 性能优化
+
+- **LOD系统**: 距离剔除优化
+- **内存管理**: 高效对象生命周期
+- **渲染优化**: 节流和防抖技术
+
+---
+
+## 🔧 开发与部署
+
+### 开发环境
 
 ```bash
-# Clone the project
-git clone <repository-url>
+# 克隆项目
+git clone https://github.com/oscarwang164/particle-inhand.git
 cd particle-inhand
 
-# Edit index.html directly
-# Use modern browser developer tools for debugging
+# 直接编辑 index.html
+# 使用现代浏览器开发工具进行调试
 ```
 
-### Deployment Instructions
+### 部署说明
 
-Since this is a pure frontend project, static files can be deployed directly to any web server.
+由于是纯前端项目，可直接部署静态文件到任何Web服务器。
 
-## 📄 License
+---
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+## 📄 许可证
 
-## 🙏 Acknowledgments
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
 
-- **Three.js**: Powerful 3D rendering engine
-- **MediaPipe**: Google's machine learning framework
-- **Google Fonts**: Quality font resources
+---
 
-## 📞 Contact
+## 🙏 致谢
 
-- **Project Maintainer**: Oscar Wang
-- **Email**: [164938@qq.com]
+- [Three.js](https://threejs.org/) - 强大的3D渲染引擎
+- [MediaPipe](https://mediapipe.dev/) - Google的机器学习框架
+- [Google Fonts](https://fonts.google.com/) - 优质字体资源
 
----\n\n## Languages / 语言切换\n\n- English: [README.md](README.md)\n- 简体中文: [README_zh-cn.md](README_zh-cn.md)\n\n---\n\n**🎉 Enjoy the amazing experience of gesture-controlled 3D particles!**\n\n⭐ If this project helps you, please give it a star!</content>
-<parameter name="filePath">README.md
+---
+
+## 📞 联系方式
+
+- **项目维护者**: Oscar Wang
+- **邮箱**: [164938@qq.com](mailto:164938@qq.com)
+- **GitHub**: [@oscarwang164](https://github.com/oscarwang164)
+
+---
+
+## 🌐 语言切换
+
+- English: [README-en.md](README-en.md)
+- 简体中文: [README.md](README.md)
+
+---
+
+<div align="center">
+
+**🎉 享受手势控制3D粒子的奇妙体验吧！**
+
+⭐ 如果这个项目对你有帮助，请给它一个星标！
+
+</div>
