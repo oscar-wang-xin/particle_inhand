@@ -6,6 +6,7 @@
 *Open your palm to spread particles, pinch fingers to gather particles*
 
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) 
+[![Preview](https://img.shields.io/badge/Preview-Open%20Demo-blue.svg)](https://1ecbd82c.pinit.eth.limo/) 
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
 [![Three.js](https://img.shields.io/badge/Three.js-r128-blue)](https://threejs.org/) 
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-Hands-green)](https://mediapipe.dev/solutions/hands)
