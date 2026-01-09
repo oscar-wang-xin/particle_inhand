@@ -1,19 +1,29 @@
 # 🤖 PARTICLE INHAND
 
-![3D粒子系统](https://img.shields.io/badge/3D-Particle_System-blue?style=for-the-badge)
-![手势识别](https://img.shields.io/badge/Gesture-MediaPipe-green?style=for-the-badge)
-![Three.js](https://img.shields.io/badge/3D-Three.js-black?style=for-the-badge)
-
-**基于手势识别的实时3D交互系统**  
+**基于手势识别的实时3D交互系统**
 *张开手掌扩散粒子，捏合手指聚集粒子*
 
- [📖 使用指南](#使用指南) • [🎯 功能特性](#功能特性)
+[📖 使用指南](#使用指南) • [🎯 功能特性](#功能特性)
 
 ---
 
 ## ✨ 项目简介
 
 这是一个创新的3D粒子交互系统，结合了先进的计算机视觉技术和3D渲染技术。通过MediaPipe手势识别，用户可以用手势实时控制15,000个粒子的行为，创造出令人惊叹的视觉效果。
+
+### 🎬 截图展示
+
+<div align="center">
+
+**主界面**
+<img src="screenshot/2026-01-09_2135004.png" alt="粒子系统主界面" width="600">
+<p><em>主界面显示粒子控制面板和手势识别状态</em></p>
+
+**粒子动画**
+<img src="screenshot/2026-01-09_2134002.png" alt="粒子动画效果" width="600">
+<p><em>实时粒子动画与手势控制效果</em></p>
+
+</div>
 
 ## 🚀 快速开始
 
