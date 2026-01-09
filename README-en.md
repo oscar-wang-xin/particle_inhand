@@ -22,7 +22,7 @@
 
 ## ✨ Project Introduction
 
-**Particle Inhand** is an innovative 3D particle interaction system that combines advanced computer vision technology and 3D rendering technology. Through MediaPipe gesture recognition, users can control the behavior of 15,000 particles in real-time with gestures, creating stunning visual effects.
+**Particle Inhand** is a 3D particle interaction system that combines computer vision technology and 3D rendering technology. Through MediaPipe gesture recognition, users can control the behavior of 15,000 particles in real-time with gestures, creating stunning visual effects.
 
 This project demonstrates how to combine AI gesture recognition technology with 3D graphics rendering technology to create immersive user interaction experiences.
 
@@ -118,7 +118,7 @@ npx http-server
 ### ✨ Core Features
 
 - ✋ **Gesture Control** - Real-time MediaPipe gesture tracking, particles respond dynamically to gestures
-- � **6 Particle Models** - Heart, Saturn, Flower, Fireworks, Butterfly, Flame
+- 🎨 **6 Particle Models** - Heart, Saturn, Flower, Fireworks, Butterfly, Flame
 - 🚀 **High-Performance Rendering** - 60fps smooth operation of 15,000 particles
 - 🌟 **Sci-fi Visual Effects** - Futuristic UI design, stunning light and shadow effects
 - 🎮 **Multi-mode Control** - Support for gesture, mouse and panel control
