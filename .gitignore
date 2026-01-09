@@ -1,0 +1,22 @@
+# AI 开发助手配置文件
+AGENTS.md
+
+# 常见忽略文件
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Node.js (如果将来添加)
+node_modules/
+npm-debug.log*
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
