@@ -162,9 +162,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Project Maintainer**: Oscar Wang
 - **Email**: [164938@qq.com]
 
----
-
-**🎉 Enjoy the amazing experience of gesture-controlled 3D particles!**
-
-⭐ If this project helps you, please give it a star!</content>
+---\n\n## Languages / 语言切换\n\n- English: [README.md](README.md)\n- 简体中文: [README_zh-cn.md](README_zh-cn.md)\n\n---\n\n**🎉 Enjoy the amazing experience of gesture-controlled 3D particles!**\n\n⭐ If this project helps you, please give it a star!</content>
 <parameter name="filePath">README.md

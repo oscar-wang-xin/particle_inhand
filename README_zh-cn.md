@@ -164,11 +164,7 @@ cd particle-inhand
 - **项目维护者**: Oscar Wang
 - **邮箱**: [164938@qq.com]
 
----
-
-**🎉 享受手势控制3D粒子的奇妙体验吧！**
-
-⭐ 如果这个项目对你有帮助，请给它一个星标！
+---\n\n## Languages / 语言切换\n\n- English: [README.md](README.md)\n- 简体中文: [README_zh-cn.md](README_zh-cn.md)\n\n---\n\n**🎉 享受手势控制3D粒子的奇妙体验吧！**\n\n⭐ 如果这个项目对你有帮助，请给它一个星标！
 
 
 
