@@ -15,6 +15,20 @@
 
 This is an innovative 3D particle interaction system that combines advanced computer vision technology and 3D rendering technology. Through MediaPipe gesture recognition, users can control the behavior of 15,000 particles in real-time with gestures, creating stunning visual effects.
 
+### 🎬 Screenshots
+
+<div align="center">
+
+**Main Interface**  
+<img src="screenshot/2026-01-09_2135004.png" alt="Particle System Main Interface" width="600">
+<p><em>Main interface showing particle controls and gesture recognition status</em></p>
+
+**Particle Animation**  
+<img src="screenshot/2026-01-09_2134002.png" alt="Particle Animation Effect" width="600">
+<p><em>Real-time particle animation with gesture control</em></p>
+
+</div>
+
 ## 🚀 Quick Start
 
 ### System Requirements
