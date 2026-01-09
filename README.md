@@ -1,9 +1,5 @@
 # 🤖 PARTICLE INHAND
 
-![3D Particle System](https://img.shields.io/badge/3D-Particle_System-blue?style=for-the-badge)
-![Gesture Recognition](https://img.shields.io/badge/Gesture-MediaPipe-green?style=for-the-badge)
-![Three.js](https://img.shields.io/badge/3D-Three.js-black?style=for-the-badge)
-
 **Real-time 3D Interactive Particle System Based on Gesture Recognition**  
 *Open your palm to spread particles, pinch fingers to gather particles*
 
@@ -21,10 +17,12 @@ This is an innovative 3D particle interaction system that combines advanced comp
 
 **Main Interface**  
 <img src="screenshot/2026-01-09_2135004.png" alt="Particle System Main Interface" width="600">
+
 <p><em>Main interface showing particle controls and gesture recognition status</em></p>
 
 **Particle Animation**  
 <img src="screenshot/2026-01-09_2134002.png" alt="Particle Animation Effect" width="600">
+
 <p><em>Real-time particle animation with gesture control</em></p>
 
 </div>
@@ -58,12 +56,12 @@ npx http-server
 
 #### Gesture Control
 
-| Gesture | Effect | Icon |
-| -------- | ------ | --- |
-| 🖐️ Open Palm | Spread Particles | 🔄 |
-| 🤏 Pinch Fingers | Gather Particles | 🎯 |
-| 👉 Move Left/Right | Control Rotation Direction | ↻ |
-| ⚡ Quick Open/Close 3 Times | Trigger Easter Egg | 🎉 |
+| Gesture                    | Effect                     | Icon |
+| -------------------------- | -------------------------- | ---- |
+| 🖐️ Open Palm              | Spread Particles           | 🔄   |
+| 🤏 Pinch Fingers           | Gather Particles           | 🎯   |
+| 👉 Move Left/Right         | Control Rotation Direction | ↻    |
+| ⚡ Quick Open/Close 3 Times | Trigger Easter Egg         | 🎉   |
 
 #### Mouse Control
 
@@ -81,7 +79,7 @@ npx http-server
 ### 🌟 Core Features
 
 - **🎨 6 Particle Models**
-
+  
   - ❤️ Heart (Heart-shaped parametric equation)
   - 🪐 Saturn (Sphere + rotating ring)
   - 🌸 Flower (Rose line equation)
@@ -90,13 +88,13 @@ npx http-server
   - 🔥 Flame (Dense bottom diffusion)
 
 - **👋 Gesture Recognition System**
-
+  
   - Real-time MediaPipe gesture tracking
   - Smooth particle response animation
   - Intelligent easter egg trigger mechanism
 
 - **🎮 Interactive Control**
-
+  
   - Mouse drag rotation
   - Scroll wheel zoom control
   - Real-time parameter adjustment
