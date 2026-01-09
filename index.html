@@ -274,7 +274,7 @@
         /* --- 模型选择按钮网格 --- */
         .shape-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
         }
 
@@ -296,11 +296,33 @@
 
         /* --- 颜色选择器自定义 --- */
         input[type="color"] {
+            -webkit-appearance: none;
             width: 100%;
             height: 40px;
-            border: none;
-            background: none;
+            border: 1px solid #0ff;
+            background: transparent;
             cursor: pointer;
+            padding: 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 3px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        input[type="color"]::-moz-color-swatch {
+            border: none;
+            border-radius: 3px;
+            width: 100%;
+            height: 100%;
         }
 
         /* --- 滑块自定义 (优化: 使用CSS变量减少重复) --- */
@@ -391,8 +413,10 @@
         /* --- Cyber Loading Animation --- */
         .loader {
             display: none;
-            margin-top: 40px;
-            position: relative;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 200px;
             height: 200px;
         }
@@ -676,6 +700,9 @@
         }
 
         #camera-preview video {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -730,6 +757,31 @@
             color: #fff;
             background: rgba(0, 255, 255, 0.2);
             transform: rotate(90deg);
+        }
+
+        #camera-preview .preview-content {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        #camera-preview .preview-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 10px;
+            display: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        #camera-preview .preview-controls.visible {
+            display: block;
         }
 
         /* --- 帮助按钮和提示框 --- */
@@ -844,6 +896,7 @@
         #help-tooltip .gesture-icon {
             font-size: 1.2rem;
         }
+
     </style>
 
     <!-- 引入库 -->
@@ -863,7 +916,16 @@
             <span class="preview-title">CAMERA PREVIEW</span>
             <button class="close-btn" id="close-preview">×</button>
         </div>
-        <video id="preview-video" autoplay muted playsinline></video>
+        <div class="preview-content">
+            <video id="preview-video" autoplay muted playsinline></video>
+        </div>
+        <div class="preview-controls" id="preview-controls">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.7rem; color: #0ff;">透明度</span>
+                <input type="range" id="opacity-slider" min="0.1" max="1" step="0.1" value="0.9" 
+                       style="width: 80px; accent-color: #0ff;">
+            </div>
+        </div>
     </div>
 
     <!-- 开始屏幕 -->
@@ -872,6 +934,42 @@
             <h1>PARTICLE INHAND</h1>
             <p>基于手势识别的实时3D交互系统。<br>张开手掌扩散粒子，捏合手指聚集粒子。</p>
             <button class="cyber-btn" id="start-btn">LET'S GO</button>
+            
+            <!-- 权限检查提示 -->
+            <div id="permission-check" style="margin-top: 30px; padding: 15px 20px; border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 10px; background: rgba(0, 20, 40, 0.5);">
+                <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="togglePermissionPanel()">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5rem;">📷</span>
+                        <span style="font-weight: bold; color: #0ff;">摄像头权限检查</span>
+                    </div>
+                    <span id="permission-toggle-icon" style="font-size: 1.2rem; color: #0ff; transition: transform 0.3s ease;">▶</span>
+                </div>
+                
+                <div id="permission-content" style="display: none; margin-top: 15px; transition: all 0.3s ease;">
+                    <div id="permission-status" style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">
+                        点击下方按钮检查摄像头权限状态
+                    </div>
+                    <button class="cyber-btn" id="check-permission-btn" style="padding: 10px 25px; font-size: 0.9rem;">检查权限</button>
+                    
+                    <!-- 权限说明 -->
+                    <div id="permission-guide" style="display: none; margin-top: 20px; text-align: left; font-size: 0.8rem; color: #ccc;">
+                        <div style="margin-bottom: 10px; font-weight: bold; color: #0ff;">📋 如何允许摄像头权限：</div>
+                        <ol style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                            <li>点击浏览器地址栏左侧的锁图标或信息图标</li>
+                            <li>找到"摄像头"或"Camera"选项</li>
+                            <li>选择"允许"或"Allow"</li>
+                            <li>刷新页面后重新点击"LET'S GO"</li>
+                        </ol>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0, 255, 255, 0.2);">
+                            <a href="https://support.google.com/chrome/answer/2693767" target="_blank" style="color: #0ff; text-decoration: none;">Chrome 设置教程 →</a>
+                            <span style="margin: 0 10px; color: #666;">|</span>
+                            <a href="https://support.mozilla.org/kb/how-manage-your-camera-and-microphone-permissions" target="_blank" style="color: #0ff; text-decoration: none;">Firefox 设置教程 →</a>
+                            <span style="margin: 0 10px; color: #666;">|</span>
+                            <a href="https://support.apple.com/guide/safari/ibrwe2159f50/mac" target="_blank" style="color: #0ff; text-decoration: none;">Safari 设置教程 →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="loader" id="loader">
             <div class="loader-ring"></div>
@@ -893,7 +991,8 @@
     <div id="ui-container">
         <!-- 顶部工具栏 -->
         <div id="top-bar">
-            <button class="icon-btn" id="toggle-preview" title="摄像头预览">📷</button>
+            <button class="icon-btn" id="toggle-preview" title="摄像头预览">🎥</button>
+            <button class="icon-btn" id="screenshot-btn" title="截图下载">📸</button>
             <button class="icon-btn" id="toggle-fullscreen" title="全屏">⛶</button>
             <button id="help-button" title="使用说明">?</button>
         </div>
@@ -932,8 +1031,16 @@
                         <span><span class="key-hint">左右移动</span> 控制旋转方向</span>
                     </div>
                     <div class="gesture-hint">
+                        <span class="gesture-icon">✊</span>
+                        <span><span class="key-hint">握拳</span> 停止旋转</span>
+                    </div>
+                    <div class="gesture-hint">
+                        <span class="gesture-icon">✌️</span>
+                        <span><span class="key-hint">V字手势</span> 切换颜色</span>
+                    </div>
+                    <div class="gesture-hint">
                         <span class="gesture-icon">⚡</span>
-                        <span><span class="key-hint">快速开合3次</span> 触发彩蛋</span>
+                        <span><span class="key-hint">握拳超过5秒</span> 触发彩蛋</span>
                     </div>
                 </div>
             </div>
@@ -941,7 +1048,7 @@
             <div class="help-section">
                 <div class="help-title">面板控制</div>
                 <div class="help-content">
-                    <div>• 切换 6 种粒子模型</div>
+                    <div>• 切换 10 种粒子模型</div>
                     <div>• 调整粒子颜色和大小</div>
                     <div>• 查看实时手势数据</div>
                 </div>
@@ -959,12 +1066,20 @@
                     <button class="shape-btn" data-shape="fireworks">烟花</button>
                     <button class="shape-btn" data-shape="butterfly">蝴蝶</button>
                     <button class="shape-btn" data-shape="fire">火焰</button>
+                    <button class="shape-btn" data-shape="spiral">螺旋</button>
+                    <button class="shape-btn" data-shape="dna">DNA</button>
+                    <button class="shape-btn" data-shape="galaxy">星系</button>
+                    <button class="shape-btn" data-shape="waterripple">水波纹</button>
                 </div>
             </div>
 
             <div class="control-group">
                 <span class="label">PARTICLE COLOR</span>
-                <input type="color" id="color-picker" value="#00ffff">
+                <div style="display: flex; gap: 10px; align-items: center; position: relative;">
+                    <div id="color-preview" style="width: 40px; height: 40px; border: 1px solid #0ff; border-radius: 5px; flex-shrink: 0; background-color: #00ffff;"></div>
+                    <button class="cyber-btn" id="color-picker-btn" style="flex: 1; padding: 10px; font-size: 0.8rem;">PICK COLOR</button>
+                    <input type="color" id="color-picker" value="#00ffff" style="position: absolute; right: 0; top: -50px; opacity: 0; cursor: pointer; width: 40px; height: 40px;">
+                </div>
             </div>
 
             <div class="control-group">
@@ -1012,6 +1127,82 @@
 
         /**
          * ============================================
+         * 全局错误处理机制
+         * ============================================
+         */
+        
+        // 全局错误处理器
+        window.addEventListener('error', (event) => {
+            console.error('全局错误捕获:', event.error);
+            showErrorNotification('应用程序发生错误，请刷新页面重试');
+        });
+
+        // 未处理的Promise错误
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('未处理的Promise错误:', event.reason);
+            showErrorNotification('异步操作失败，请刷新页面重试');
+        });
+
+        // 权限面板折叠函数
+        function togglePermissionPanel() {
+            const content = document.getElementById('permission-content');
+            const icon = document.getElementById('permission-toggle-icon');
+            
+            if (content.style.display === 'none') {
+                // 展开：显示内容，图标旋转90度变成朝下
+                content.style.display = 'block';
+                icon.style.transform = 'rotate(90deg)';
+            } else {
+                // 折叠：隐藏内容，图标旋转回0度变成朝右
+                content.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // 错误通知显示函数
+        function showErrorNotification(message) {
+            // 移除已存在的错误通知
+            const existingError = document.getElementById('error-notification');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'error-notification';
+            errorDiv.innerHTML = `
+                <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+                           background: rgba(255, 68, 68, 0.95); color: white; padding: 15px 25px;
+                           border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                           display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', sans-serif;
+                           animation: slideDown 0.3s ease;">
+                    <span style="font-size: 1.5rem;">⚠️</span>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: none; border: 1px solid white; color: white;
+                                   padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+                        关闭
+                    </button>
+                </div>
+                <style>
+                    @keyframes slideDown {
+                        from { opacity: 0; transform: translate(-50%, -20px); }
+                        to { opacity: 1; transform: translate(-50%, 0); }
+                    }
+                </style>
+            `;
+            document.body.appendChild(errorDiv);
+
+            // 5秒后自动消失
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.style.animation = 'slideDown 0.3s ease reverse';
+                    setTimeout(() => errorDiv.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        /**
+         * ============================================
          * 1. 全局配置与状态管理
          * ============================================
          */
@@ -1024,8 +1215,12 @@
             MOUSE_ROTATION_SPEED: 0.005,
             SMOOTHING_FACTOR: 0.1, // 数值平滑因子
             GESTURE_THRESHOLD: 0.5, // 手势张开阈值
-            EASTER_EGG_TOGGLES: 6, // 触发彩蛋需要的开合次数
-            EASTER_EGG_TIME_WINDOW: 500 // 彩蛋触发时间窗口(ms)
+            // 性能配置
+            PERFORMANCE_LEVELS: {
+                high: { count: 20000, quality: 1.0 },
+                medium: { count: 15000, quality: 0.8 },
+                low: { count: 10000, quality: 0.6 }
+            }
         };
 
         // 全局状态对象 (集中管理所有状态)
@@ -1051,12 +1246,11 @@
 
             // 彩蛋效果状态
             easterEgg: {
-                isOpenGesture: false,
-                toggleCount: 0,
-                lastToggleTime: 0,
                 isActive: false,
                 startTime: 0,
-                particles: []
+                particles: [],
+                isFisting: false,
+                fistStartTime: 0
             },
 
             // 鼠标控制状态
@@ -1076,7 +1270,303 @@
             // MediaPipe 对象
             hands: null,
             videoElement: null,
-            previewVideoElement: null
+            previewVideoElement: null,
+
+            // 事件监听器管理（防止内存泄漏）
+            eventListeners: []
+        };
+
+        // 事件监听器管理工具
+        const EventManager = {
+            /**
+             * 添加事件监听器并记录
+             */
+            add(element, event, handler, options) {
+                if (!element) return;
+                element.addEventListener(event, handler, options);
+                state.eventListeners.push({ element, event, handler, options });
+            },
+
+            /**
+             * 移除所有已注册的事件监听器
+             */
+            removeAll() {
+                state.eventListeners.forEach(({ element, event, handler, options }) => {
+                    if (element) {
+                        element.removeEventListener(event, handler, options);
+                    }
+                });
+                state.eventListeners = [];
+                console.log('所有事件监听器已清理');
+            },
+
+            /**
+             * 清理特定元素的所有监听器
+             */
+            removeByElement(element) {
+                if (!element) return;
+                state.eventListeners = state.eventListeners.filter(({ el, event, handler, options }) => {
+                    if (el === element) {
+                        element.removeEventListener(event, handler, options);
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        };
+
+        /**
+         * 配置管理工具 - 使用localStorage保存用户偏好
+         */
+        const ConfigManager = {
+            STORAGE_KEY: 'particle_inhand_config',
+
+            /**
+             * 保存配置
+             */
+            save() {
+                const config = {
+                    currentShape: state.currentShape,
+                    color: '#' + state.color.getHexString(),
+                    particleSize: state.particles ? state.particles.material.size : CONFIG.PARTICLE_SIZE,
+                    timestamp: Date.now()
+                };
+
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
+                } catch (error) {
+                    console.error('保存配置失败:', error);
+                }
+            },
+
+            /**
+             * 加载配置
+             */
+            load() {
+                try {
+                    const saved = localStorage.getItem(this.STORAGE_KEY);
+                    if (saved) {
+                        const config = JSON.parse(saved);
+                        return config;
+                    }
+                } catch (error) {
+                    console.error('加载配置失败:', error);
+                }
+                return null;
+            },
+
+            /**
+             * 应用保存的配置
+             */
+            apply() {
+                const config = this.load();
+                if (!config) return;
+
+                // 应用形状
+                if (config.currentShape && config.currentShape !== state.currentShape) {
+                    state.currentShape = config.currentShape;
+                    state.targetPositions = getShapePositions(state.currentShape);
+                    
+                    // 更新UI
+                    const shapeBtns = document.querySelectorAll('.shape-btn');
+                    shapeBtns.forEach(btn => {
+                        btn.classList.toggle('active', btn.getAttribute('data-shape') === config.currentShape);
+                    });
+                }
+
+                // 应用颜色
+                if (config.color) {
+                    state.color.setHex(parseInt(config.color.replace('#', ''), 16));
+                    if (state.particles) {
+                        state.particles.material.color.set(state.color);
+                    }
+
+                    // 更新UI
+                    const colorPicker = document.getElementById('color-picker');
+                    const colorPreview = document.getElementById('color-preview');
+                    // 确保颜色值有 # 前缀
+                    const colorHex = config.color.startsWith('#') ? config.color : '#' + config.color;
+                    if (colorPicker) {
+                        colorPicker.value = colorHex;
+                    }
+                    if (colorPreview) {
+                        colorPreview.style.backgroundColor = colorHex;
+                    }
+                }
+
+                // 应用粒子大小
+                if (config.particleSize) {
+                    if (state.particles) {
+                        state.particles.material.size = config.particleSize;
+                    }
+                    
+                    // 更新UI
+                    const sizeSlider = document.getElementById('size-slider');
+                    const sizeValue = document.getElementById('size-value');
+                    if (sizeSlider && sizeValue) {
+                        sizeSlider.value = config.particleSize;
+                        sizeValue.textContent = parseFloat(config.particleSize).toFixed(2);
+                    }
+                }
+            },
+
+            /**
+             * 重置配置
+             */
+            reset() {
+                try {
+                    localStorage.removeItem(this.STORAGE_KEY);
+                    console.log('配置已重置');
+                    return true;
+                } catch (error) {
+                    console.error('重置配置失败:', error);
+                    return false;
+                }
+            }
+        };
+
+        /**
+         * 截图功能工具
+         */
+        const ScreenshotTool = {
+            /**
+             * 截图并下载
+             */
+            capture() {
+                if (!state.renderer) {
+                    showErrorNotification('渲染器未初始化，无法截图');
+                    return;
+                }
+
+                try {
+                    // 渲染一帧
+                    state.renderer.render(state.scene, state.camera);
+                    
+                    // 获取canvas数据
+                    const canvas = state.renderer.domElement;
+                    const dataURL = canvas.toDataURL('image/png');
+                    
+                    // 创建下载链接
+                    const link = document.createElement('a');
+                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                    link.download = `particle-inhand-${timestamp}.png`;
+                    link.href = dataURL;
+                    
+                    // 触发下载
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    console.log('截图已保存');
+                    showErrorNotification('截图已保存！');
+                } catch (error) {
+                    console.error('截图失败:', error);
+                    showErrorNotification('截图失败，请重试');
+                }
+            }
+        };
+
+        /**
+         * ============================================
+         * 设备检测和性能优化工具
+         * ============================================
+         */
+        const DeviceInfo = {
+            checkBrowserSupport() {
+                return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+            },
+
+            checkSecureContext() {
+                return location.protocol === 'https:' || 
+                       location.hostname === 'localhost' || 
+                       location.hostname === '127.0.0.1';
+            }
+        };
+
+        const PerformanceDetector = {
+            detectPerformanceLevel() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const gl = canvas.getContext('webgl');
+                    
+                    if (!gl) return 'low';
+                    
+                    // 检查 WebGL 扩展
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (debugInfo) {
+                        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                        
+                        // 根据GPU性能分级
+                        if (renderer.includes('NVIDIA') || renderer.includes('AMD') || 
+                            renderer.includes('RTX') || renderer.includes('GTX')) {
+                            return 'high';
+                        } else if (renderer.includes('Intel')) {
+                            return 'medium';
+                        } else if (renderer.includes('Mali') || renderer.includes('Adreno')) {
+                            return 'medium';
+                        }
+                    }
+                    
+                    // 检查设备内存
+                    if (navigator.deviceMemory) {
+                        if (navigator.deviceMemory >= 8) return 'high';
+                        if (navigator.deviceMemory >= 4) return 'medium';
+                    }
+                    
+                    return 'medium';
+                } catch (e) {
+                    console.warn('性能检测失败，使用默认设置:', e);
+                    return 'medium';
+                }
+            },
+
+            applyPerformanceSettings() {
+                const level = this.detectPerformanceLevel();
+                const settings = CONFIG.PERFORMANCE_LEVELS[level];
+                CONFIG.PARTICLE_COUNT = settings.count;
+            }
+        };
+
+        const SecurityChecker = {
+            checkCameraPermission() {
+                return new Promise((resolve) => {
+                    if (!navigator.permissions) {
+                        resolve('unknown');
+                        return;
+                    }
+
+                    navigator.permissions.query({ name: 'camera' })
+                        .then(permissionStatus => {
+                            resolve(permissionStatus.state);
+                        })
+                        .catch(() => resolve('unknown'));
+                });
+            },
+
+            showSecurityWarning() {
+                if (!DeviceInfo.checkSecureContext()) {
+                    const warning = document.createElement('div');
+                    warning.id = 'security-warning';
+                    warning.innerHTML = `
+                        <div style="position: fixed; top: 0; left: 0; right: 0; 
+                                    background: #ff4444; color: white; padding: 15px; 
+                                    text-align: center; z-index: 1000; 
+                                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+                            <strong>⚠️ 安全警告</strong><br>
+                            摄像头访问需要 HTTPS 环境。请使用 https:// 或在本地 localhost 运行。
+                            <button onclick="this.parentElement.parentElement.remove()" 
+                                    style="margin-left: 10px; padding: 5px 15px; 
+                                           background: white; color: #ff4444; 
+                                           border: none; border-radius: 3px; cursor: pointer;">
+                                知道了
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(warning);
+                    return true;
+                }
+                return false;
+            }
         };
 
         // 错误处理工具函数
@@ -1309,6 +1799,122 @@
             },
 
             /**
+             * 螺旋生成器 (对数螺旋)
+             * 方程: r = a * e^(b*θ)
+             */
+            generateSpiral() {
+                const positions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
+
+                for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                    const i3 = i * 3;
+                    const theta = Math.random() * Math.PI * 6; // 3圈
+                    const a = 0.1;
+                    const b = 0.3;
+                    const r = a * Math.exp(b * theta);
+
+                    // 添加一些厚度
+                    const thickness = (Math.random() - 0.5) * 0.5;
+
+                    positions[i3] = (r + thickness) * Math.cos(theta) * 0.3;
+                    positions[i3 + 1] = (Math.random() - 0.5) * 0.3; // Y轴厚度
+                    positions[i3 + 2] = (r + thickness) * Math.sin(theta) * 0.3;
+                }
+                return positions;
+            },
+
+            /**
+             * DNA双螺旋生成器
+             * 使用两条相互缠绕的螺旋链
+             */
+            generateDNA() {
+                const positions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
+
+                for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                    const i3 = i * 3;
+                    const t = (i / CONFIG.PARTICLE_COUNT) * Math.PI * 4; // 2圈
+                    const helixRadius = 1.0;
+                    const helixPitch = 0.5;
+
+                    // 随机选择两条链中的一条
+                    const chain = Math.random() > 0.5 ? 1 : -1;
+
+                    // 双螺旋位置
+                    const x = helixRadius * Math.cos(t) * chain;
+                    const z = helixRadius * Math.sin(t) * chain;
+                    const y = t * helixPitch - 2; // 中心化Y轴
+
+                    // 添加随机散射
+                    const scatter = 0.1;
+                    positions[i3] = x + (Math.random() - 0.5) * scatter;
+                    positions[i3 + 1] = y + (Math.random() - 0.5) * scatter;
+                    positions[i3 + 2] = z + (Math.random() - 0.5) * scatter;
+                }
+                return positions;
+            },
+
+            /**
+             * 星系生成器 (螺旋星系)
+             * 模拟银河系的螺旋臂结构
+             */
+            generateGalaxy() {
+                const positions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
+
+                for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                    const i3 = i * 3;
+
+                    // 随机选择一条螺旋臂 (4条臂)
+                    const arm = Math.floor(Math.random() * 4);
+                    const armAngle = (arm / 4) * Math.PI * 2;
+
+                    // 距离中心的距离 (越靠近中心越密集)
+                    const distance = Math.pow(Math.random(), 0.5) * 4;
+
+                    // 螺旋角度 (距离越远，旋转角度越大)
+                    const spiralAngle = distance * 1.5;
+
+                    // 最终角度
+                    const angle = armAngle + spiralAngle + (Math.random() - 0.5) * 0.5;
+
+                    // 添加厚度 (星系盘面厚度)
+                    const thickness = (Math.random() - 0.5) * 0.3 * (1 - distance / 4);
+
+                    positions[i3] = Math.cos(angle) * distance;
+                    positions[i3 + 1] = thickness;
+                    positions[i3 + 2] = Math.sin(angle) * distance;
+                }
+                return positions;
+            },
+
+            /**
+             * 水波纹生成器 (同心圆波纹)
+             * 模拟水滴落在水面产生的波纹
+             */
+            generateWaterRipple() {
+                const positions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
+
+                for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                    const i3 = i * 3;
+
+                    // 随机角度
+                    const angle = Math.random() * Math.PI * 2;
+
+                    // 距离中心的距离 (形成多个同心圆)
+                    const ringCount = 5;
+                    const ringIndex = Math.floor(Math.random() * ringCount);
+                    const baseRadius = (ringIndex + 1) * 0.8;
+                    const radius = baseRadius + (Math.random() - 0.5) * 0.3;
+
+                    // 波纹高度 (使用正弦函数模拟波纹起伏)
+                    const rippleHeight = Math.sin(radius * 3) * 0.3;
+
+                    positions[i3] = Math.cos(angle) * radius;
+                    positions[i3 + 1] = rippleHeight + (Math.random() - 0.5) * 0.1;
+                    positions[i3 + 2] = Math.sin(angle) * radius;
+                }
+                return positions;
+            },
+
+            /**
              * 统一生成接口 (工厂模式)
              * @param {string} type - 形状类型
              * @returns {Float32Array} 粒子位置数组
@@ -1320,7 +1926,11 @@
                     'flower': this.generateFlower,
                     'fireworks': this.generateFireworks,
                     'butterfly': this.generateButterfly,
-                    'fire': this.generateFire
+                    'fire': this.generateFire,
+                    'spiral': this.generateSpiral,
+                    'dna': this.generateDNA,
+                    'galaxy': this.generateGalaxy,
+                    'waterripple': this.generateWaterRipple
                 };
 
                 const generator = generators[type];
@@ -1384,8 +1994,6 @@
 
                     // 启动动画循环 (调用AnimationSystem的animate方法)
                     AnimationSystem.animate();
-
-                    console.log('Three.js 系统初始化完成');
                 }, 'ThreeJSSystem.init');
             },
 
@@ -1635,8 +2243,6 @@
                 state.particles.scale.set(1, 1, 1);
                 state.mouse.targetRotationX = 0;
                 state.mouse.targetRotationY = 0;
-
-                console.log('彩蛋效果结束,恢复正常状态');
             }
         };
 
@@ -1651,6 +2257,9 @@
          * ============================================
          */
         const GestureSystem = {
+            // 手势触发时间戳
+            lastVGestureTime: 0,
+
             /**
              * 处理手势识别结果
              * @param {Object} results - MediaPipe返回的手势数据
@@ -1673,6 +2282,18 @@
              * @param {Array} landmarks - 手部关键点数组
              */
             processHandGesture(landmarks) {
+                // 检测握拳手势
+                if (this.detectFist(landmarks)) {
+                    this.handleFistGesture();
+                    return;
+                }
+
+                // 检测V字手势
+                if (this.detectVGesture(landmarks)) {
+                    this.handleVGesture();
+                    return;
+                }
+
                 // 计算拇指和食指距离
                 const thumbTip = landmarks[4];
                 const indexTip = landmarks[8];
@@ -1686,9 +2307,6 @@
                 state.handInteractionFactor +=
                     (factor - state.handInteractionFactor) * CONFIG.SMOOTHING_FACTOR;
 
-                // 检测彩蛋效果
-                this.detectEasterEgg(factor);
-
                 // 计算手势旋转控制
                 if (!state.easterEgg.isActive) {
                     this.calculateHandRotation(landmarks);
@@ -1696,31 +2314,123 @@
             },
 
             /**
-             * 检测彩蛋触发条件
-             * @param {number} factor - 当前手势因子
+             * 检测握拳手势
+             * @param {Array} landmarks - 手部关键点数组
+             * @returns {boolean} 是否为握拳
              */
-            detectEasterEgg(factor) {
+            detectFist(landmarks) {
+                // 检查所有指尖是否靠近手掌中心（关键点9）
+                const palmCenter = landmarks[9];
+                const fingertips = [4, 8, 12, 16, 20]; // 拇指、食指、中指、无名指、小指
+
+                for (const tipIndex of fingertips) {
+                    const tip = landmarks[tipIndex];
+                    const distance = Math.sqrt(
+                        Math.pow(tip.x - palmCenter.x, 2) +
+                        Math.pow(tip.y - palmCenter.y, 2)
+                    );
+                    // 如果任一指尖距离手掌中心太远，则不是握拳
+                    // 降低阈值到0.12，使握拳检测更严格
+                    if (distance > 0.12) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+
+            /**
+             * 处理握拳手势 - 停止旋转
+             */
+            handleFistGesture() {
                 const currentTime = Date.now();
-                const isOpenNow = factor > CONFIG.GESTURE_THRESHOLD;
 
-                if (isOpenNow !== state.easterEgg.isOpenGesture) {
-                    const timeSinceLastToggle = currentTime - state.easterEgg.lastToggleTime;
+                // 检测握拳持续时间
+                if (!state.easterEgg.isFisting) {
+                    // 刚开始握拳
+                    state.easterEgg.isFisting = true;
+                    state.easterEgg.fistStartTime = currentTime;
+                } else {
+                    // 持续握拳
+                    const fistDuration = currentTime - state.easterEgg.fistStartTime;
 
-                    // 检测快速开合
-                    if (timeSinceLastToggle < CONFIG.EASTER_EGG_TIME_WINDOW &&
-                        timeSinceLastToggle > 100) {
-                        state.easterEgg.toggleCount++;
+                    if (fistDuration >= 5000 && !state.easterEgg.isActive) {
+                        this.triggerEasterEgg(currentTime);
+                    }
+                }
 
-                        if (state.easterEgg.toggleCount >= CONFIG.EASTER_EGG_TOGGLES &&
-                            !state.easterEgg.isActive) {
-                            this.triggerEasterEgg(currentTime);
-                        }
-                    } else {
-                        state.easterEgg.toggleCount = 1;
+                state.targetRotationSpeed = 0;
+                state.handInteractionFactor = 0.3; // 握拳时粒子聚集
+            },
+
+            /**
+             * 检测V字手势
+             * @param {Array} landmarks - 手部关键点数组
+             * @returns {boolean} 是否为V字手势
+             */
+            detectVGesture(landmarks) {
+                // 检查食指和中指是否伸直，其他手指是否弯曲
+                const indexTip = landmarks[8];
+                const middleTip = landmarks[12];
+                const ringTip = landmarks[16];
+                const pinkyTip = landmarks[20];
+                const palmCenter = landmarks[9];
+
+                // 食指和中指应该远离手掌中心
+                const indexDistance = Math.sqrt(
+                    Math.pow(indexTip.x - palmCenter.x, 2) +
+                    Math.pow(indexTip.y - palmCenter.y, 2)
+                );
+                const middleDistance = Math.sqrt(
+                    Math.pow(middleTip.x - palmCenter.x, 2) +
+                    Math.pow(middleTip.y - palmCenter.y, 2)
+                );
+
+                // 无名指和小指应该靠近手掌中心
+                const ringDistance = Math.sqrt(
+                    Math.pow(ringTip.x - palmCenter.x, 2) +
+                    Math.pow(ringTip.y - palmCenter.y, 2)
+                );
+                const pinkyDistance = Math.sqrt(
+                    Math.pow(pinkyTip.x - palmCenter.x, 2) +
+                    Math.pow(pinkyTip.y - palmCenter.y, 2)
+                );
+
+                // 食指和中指伸直，无名指和小指弯曲
+                // 降低食指中指阈值到0.15，提高无名指小指阈值到0.18
+                return indexDistance > 0.15 && middleDistance > 0.15 &&
+                       ringDistance < 0.18 && pinkyDistance < 0.18;
+            },
+
+            /**
+             * 处理V字手势 - 切换颜色
+             */
+            handleVGesture() {
+                // 防止频繁触发
+                const currentTime = Date.now();
+                if (!this.lastVGestureTime || currentTime - this.lastVGestureTime > 1000) {
+                    // 生成随机颜色
+                    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+
+                    // 更新粒子颜色
+                    state.color.set(randomColor);
+                    if (state.particles) {
+                        state.particles.material.color.set(state.color);
                     }
 
-                    state.easterEgg.isOpenGesture = isOpenNow;
-                    state.easterEgg.lastToggleTime = currentTime;
+                    // 更新UI
+                    const colorPicker = document.getElementById('color-picker');
+                    const colorPreview = document.getElementById('color-preview');
+                    if (colorPicker) {
+                        colorPicker.value = randomColor;
+                    }
+                    if (colorPreview) {
+                        colorPreview.style.backgroundColor = randomColor;
+                    }
+
+                    // 保存配置
+                    ConfigManager.save();
+
+                    this.lastVGestureTime = currentTime;
                 }
             },
 
@@ -1731,8 +2441,6 @@
             triggerEasterEgg(startTime) {
                 state.easterEgg.isActive = true;
                 state.easterEgg.startTime = startTime;
-                state.easterEgg.toggleCount = 0;
-                console.log('🎉 彩蛋效果触发! 连续快速开合3次!');
             },
 
             /**
@@ -1782,8 +2490,8 @@
                 state.targetRotationSpeed = CONFIG.MOUSE_ROTATION_SPEED;
                 state.rotationDirection = 1;
                 state.lastHandPosition = { x: null, y: null, time: 0 };
-                state.easterEgg.toggleCount = 0;
-                state.easterEgg.isOpenGesture = false;
+                state.easterEgg.isFisting = false;
+                state.easterEgg.fistStartTime = 0;
             },
 
             /**
@@ -1887,6 +2595,17 @@
          * MediaPipe初始化
          */
         function initMediaPipe() {
+            // 检查浏览器支持
+            if (!DeviceInfo.checkBrowserSupport()) {
+                alert('您的浏览器不支持摄像头访问。\n\n请使用以下浏览器之一：\n• Chrome 88+\n• Firefox 85+\n• Safari 14+\n• Edge 88+');
+                state.isSystemRunning = false;
+                document.getElementById('start-btn').style.display = 'block';
+                return;
+            }
+
+            // 检查安全上下文
+            SecurityChecker.showSecurityWarning();
+
             // 初始化视频元素引用
             state.videoElement = document.getElementById('input-video');
             state.previewVideoElement = document.getElementById('preview-video');
@@ -1910,66 +2629,172 @@
             const startScreen = document.getElementById('start-screen');
 
             startScreen.classList.add('loading');
-            loaderText.textContent = 'ACCESSING CAMERA...';
+            loaderText.textContent = 'CHECKING PERMISSIONS...';
             loader.classList.add('active');
 
-            ErrorHandler.handleAsync(
-                navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } }),
-                'Camera Access'
-            )
-                .then(stream => {
-                    loaderText.textContent = 'CAMERA CONNECTED';
-
-                    state.previewVideoElement.srcObject = stream;
-                    state.videoElement.srcObject = stream;
-
-                    return new Promise((resolve) => {
-                        state.videoElement.onloadedmetadata = () => {
-                            state.videoElement.play();
-                            resolve();
-                        };
-                    });
-                })
-                .then(() => {
-                    loaderText.textContent = 'LOADING AI MODELS...';
-
-                    const processFrame = async () => {
-                        await state.hands.send({image: state.videoElement});
-                        requestAnimationFrame(processFrame);
-                    };
-                    processFrame();
-
-                    return new Promise(resolve => setTimeout(resolve, 1000));
-                })
-                .then(() => {
-                    loaderText.textContent = 'SYSTEM READY';
-                    return new Promise(resolve => setTimeout(resolve, 500));
-                })
-                .then(() => {
-                    document.getElementById('status-text').innerText = "CAMERA ACTIVE";
-                    document.getElementById('status-dot').classList.add('active');
-                    startScreen.classList.add('hidden');
-
-                    setTimeout(() => {
-                        startScreen.style.display = 'none';
-                        document.getElementById('controls').classList.add('visible');
-                    }, 500);
-                })
-                .catch(err => {
-                    console.error("Camera init failed:", err);
-                    alert("无法启动摄像头，请确保允许访问权限。");
-
+            // 检查摄像头权限
+            SecurityChecker.checkCameraPermission().then(permissionState => {
+                if (permissionState === 'denied') {
+                    loaderText.textContent = 'PERMISSION DENIED';
                     loader.classList.remove('active');
                     startScreen.classList.remove('loading');
+                    
+                    const errorMsg = document.createElement('div');
+                    errorMsg.innerHTML = `
+                        <div style="text-align: center; color: #ff4444; margin-top: 20px;">
+                            <h3>❌ 摄像头权限被拒绝</h3>
+                            <p style="color: #ccc; margin: 15px 0;">
+                                请在浏览器设置中允许摄像头访问权限，然后重试。
+                            </p>
+                            <button class="cyber-btn" onclick="location.reload()">重新加载</button>
+                            <button class="cyber-btn" onclick="this.parentElement.parentElement.remove()" 
+                                    style="margin-left: 10px; border-color: #666; color: #666;">
+                                继续使用（无手势控制）
+                            </button>
+                        </div>
+                    `;
+                    document.querySelector('.intro-content').appendChild(errorMsg);
                     state.isSystemRunning = false;
                     document.getElementById('start-btn').style.display = 'block';
+                    return;
+                }
+
+                loaderText.textContent = 'ACCESSING CAMERA...';
+
+                return ErrorHandler.handleAsync(
+                    navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: 640, 
+                            height: 480,
+                            facingMode: 'user' // 优先使用前置摄像头
+                        } 
+                    }),
+                    'Camera Access'
+                );
+            })
+            .then(stream => {
+                if (!stream) return; // 权限被拒绝的情况
+                
+                loaderText.textContent = 'CAMERA CONNECTED';
+
+                state.previewVideoElement.srcObject = stream;
+                state.videoElement.srcObject = stream;
+
+                return new Promise((resolve) => {
+                    state.videoElement.onloadedmetadata = () => {
+                        state.videoElement.play();
+                        resolve();
+                    };
                 });
+            })
+            .then(() => {
+                if (!state.videoElement.srcObject) return;
+                
+                loaderText.textContent = 'LOADING AI MODELS (0%)...';
+
+                // 模拟加载进度（MediaPipe没有真实的进度回调）
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress > 95) {
+                        progress = 95;
+                        clearInterval(progressInterval);
+                    }
+                    loaderText.textContent = `LOADING AI MODELS (${Math.floor(progress)}%)...`;
+                }, 200);
+
+                const processFrame = async () => {
+                    await state.hands.send({image: state.videoElement});
+                    requestAnimationFrame(processFrame);
+                };
+                processFrame();
+
+                // 等待模型加载完成
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        clearInterval(progressInterval);
+                        progress = 100;
+                        loaderText.textContent = 'LOADING AI MODELS (100%)...';
+                        setTimeout(resolve, 300);
+                    }, 2000);
+                });
+            })
+            .then(() => {
+                if (!state.videoElement.srcObject) return;
+                
+                loaderText.textContent = 'SYSTEM READY';
+                return new Promise(resolve => setTimeout(resolve, 500));
+            })
+            .then(() => {
+                if (!state.videoElement.srcObject) return;
+                
+                document.getElementById('status-text').innerText = "CAMERA ACTIVE";
+                document.getElementById('status-dot').classList.add('active');
+                startScreen.classList.add('hidden');
+
+                setTimeout(() => {
+                    startScreen.style.display = 'none';
+                    document.getElementById('controls').classList.add('visible');
+                }, 500);
+            })
+            .catch(err => {
+                console.error("Camera init failed:", err);
+                
+                loaderText.textContent = 'INITIALIZATION FAILED';
+                loader.classList.remove('active');
+                startScreen.classList.remove('loading');
+
+                // 显示详细的错误信息
+                const errorMsg = document.createElement('div');
+                errorMsg.innerHTML = `
+                    <div style="text-align: center; color: #ff4444; margin-top: 20px;">
+                        <h3>❌ 摄像头初始化失败</h3>
+                        <p style="color: #ccc; margin: 15px 0; font-size: 0.9rem;">
+                            错误信息: ${err.message || '未知错误'}
+                        </p>
+                        <p style="color: #aaa; margin: 10px 0; font-size: 0.8rem;">
+                            可能的原因：<br>
+                            • 摄像头被其他应用占用<br>
+                            • 浏览器权限被拒绝<br>
+                            • 设备不支持摄像头访问
+                        </p>
+                        <button class="cyber-btn" onclick="location.reload()">重新加载</button>
+                        <button class="cyber-btn" onclick="this.parentElement.parentElement.remove()" 
+                                style="margin-left: 10px; border-color: #666; color: #666;">
+                            继续使用（无手势控制）
+                        </button>
+                    </div>
+                `;
+                document.querySelector('.intro-content').appendChild(errorMsg);
+                
+                state.isSystemRunning = false;
+                document.getElementById('start-btn').style.display = 'block';
+            });
         }
 
         /**
          * 6. UI 事件监听
          */
         document.addEventListener('DOMContentLoaded', () => {
+            // 初始化颜色选择器和预览的默认值
+            const colorPicker = document.getElementById('color-picker');
+            const colorPreview = document.getElementById('color-preview');
+
+            // 尝试从本地存储加载保存的颜色
+            const savedConfig = ConfigManager.load();
+            let initialColor = CONFIG.DEFAULT_COLOR;
+
+            if (savedConfig && savedConfig.color) {
+                initialColor = savedConfig.color;
+            }
+
+            if (colorPicker && colorPreview) {
+                // 确保颜色值有 # 前缀
+                const colorHex = initialColor.startsWith('#') ? initialColor : '#' + initialColor;
+                colorPicker.value = colorHex;
+                colorPreview.style.backgroundColor = colorHex;
+            }
+
             // 开始按钮
             document.getElementById('start-btn').addEventListener('click', () => {
                 if(isSystemRunning) return;
@@ -1977,13 +2802,84 @@
 
                 document.getElementById('start-btn').style.display = 'none';
 
+                // 应用性能设置
+                PerformanceDetector.applyPerformanceSettings();
+
+                // 在初始化 Three.js 之前，先加载保存的配置并设置颜色
+                const savedConfig = ConfigManager.load();
+                if (savedConfig && savedConfig.color) {
+                    state.color.setHex(parseInt(savedConfig.color.replace('#', ''), 16));
+                }
+
                 // 初始化 Three.js
                 initThree();
+
+                // 初始化颜色选择器和预览的默认值
+                const colorPicker = document.getElementById('color-picker');
+                const colorPreview = document.getElementById('color-preview');
+                if (colorPicker && colorPreview) {
+                    const currentColor = '#' + state.color.getHexString();
+                    colorPicker.value = currentColor;
+                    colorPreview.style.backgroundColor = currentColor;
+                }
+
+                // 应用保存的配置（延迟确保粒子系统已初始化）
+                setTimeout(() => ConfigManager.apply(), 300);
 
                 // 初始化 MediaPipe
                 initMediaPipe();
             });
 
+            // 权限检查按钮
+            document.getElementById('check-permission-btn').addEventListener('click', async () => {
+                const statusDiv = document.getElementById('permission-status');
+                const guideDiv = document.getElementById('permission-guide');
+                const checkBtn = document.getElementById('check-permission-btn');
+                
+                checkBtn.disabled = true;
+                checkBtn.textContent = '检查中...';
+                statusDiv.innerHTML = '<span style="color: #0ff;">正在检查摄像头权限...</span>';
+                
+                try {
+                    const permissionState = await SecurityChecker.checkCameraPermission();
+                    
+                    if (permissionState === 'granted') {
+                        statusDiv.innerHTML = '<span style="color: #0f0;">✅ 摄像头权限已授予</span>';
+                        checkBtn.textContent = '检查完成';
+                        checkBtn.style.borderColor = '#0f0';
+                        checkBtn.style.color = '#0f0';
+                    } else if (permissionState === 'denied') {
+                        statusDiv.innerHTML = '<span style="color: #ff4444;">❌ 摄像头权限被拒绝</span>';
+                        guideDiv.style.display = 'block';
+                        checkBtn.textContent = '权限被拒绝';
+                        checkBtn.style.borderColor = '#ff4444';
+                        checkBtn.style.color = '#ff4444';
+                    } else if (permissionState === 'prompt') {
+                        statusDiv.innerHTML = '<span style="color: #ffff00;">⚠️ 需要授予摄像头权限</span>';
+                        guideDiv.style.display = 'block';
+                        checkBtn.textContent = '需要授权';
+                        checkBtn.style.borderColor = '#ffff00';
+                        checkBtn.style.color = '#ffff00';
+                    } else {
+                        statusDiv.innerHTML = '<span style="color: #aaa;">ℹ️ 浏览器不支持权限查询，点击"LET\'S GO"直接测试</span>';
+                        checkBtn.textContent = '无法查询';
+                        checkBtn.style.borderColor = '#666';
+                        checkBtn.style.color = '#666';
+                    }
+                } catch (error) {
+                    statusDiv.innerHTML = '<span style="color: #ff4444;">❌ 检查失败: ' + error.message + '</span>';
+                    guideDiv.style.display = 'block';
+                    checkBtn.textContent = '检查失败';
+                    checkBtn.style.borderColor = '#ff4444';
+                    checkBtn.style.color = '#ff4444';
+                }
+                
+                setTimeout(() => {
+                    checkBtn.disabled = false;
+                }, 2000);
+            });
+
+            // 形状切换
             // 形状切换
             const shapeBtns = document.querySelectorAll('.shape-btn');
             shapeBtns.forEach(btn => {
@@ -2002,16 +2898,34 @@
                         if(currentShape !== 'fire' && particles) {
                             // particles.rotation.y 会继续转
                         }
+                        
+                        // 保存配置
+                        ConfigManager.save();
                     }
                 });
             });
 
+            // 颜色选择按钮
+            const colorPickerBtn = document.getElementById('color-picker-btn');
+            colorPickerBtn.addEventListener('click', () => {
+                colorPicker.click();
+            });
+
             // 颜色选择
-            const colorPicker = document.getElementById('color-picker');
             colorPicker.addEventListener('input', (e) => {
                 const hex = e.target.value;
                 if(particles) {
                     particles.material.color.set(hex);
+                    state.color.set(hex);
+                    
+                    // 更新颜色预览
+                    if (colorPreview) {
+                        colorPreview.style.backgroundColor = hex;
+                    }
+                    
+                    // 保存配置（使用防抖）
+                    if (this.saveTimeout) clearTimeout(this.saveTimeout);
+                    this.saveTimeout = setTimeout(() => ConfigManager.save(), 500);
                 }
             });
 
@@ -2025,7 +2939,17 @@
 
                 if(particles) {
                     particles.material.size = newSize;
+                    
+                    // 保存配置（使用防抖）
+                    if (this.saveTimeout) clearTimeout(this.saveTimeout);
+                    this.saveTimeout = setTimeout(() => ConfigManager.save(), 500);
                 }
+            });
+
+            // 截图功能
+            const screenshotBtn = document.getElementById('screenshot-btn');
+            screenshotBtn.addEventListener('click', () => {
+                ScreenshotTool.capture();
             });
 
             // 全屏控制
@@ -2044,6 +2968,8 @@
             const previewBtn = document.getElementById('toggle-preview');
             const cameraPreview = document.getElementById('camera-preview');
             const closePreviewBtn = document.getElementById('close-preview');
+            const opacitySlider = document.getElementById('opacity-slider');
+            const previewControls = document.getElementById('preview-controls');
             const previewHeader = cameraPreview.querySelector('.preview-header');
             const previewTitle = cameraPreview.querySelector('.preview-title');
 
@@ -2054,6 +2980,21 @@
             let initialX = 0;
             let initialY = 0;
             let isWindowVisible = false;
+
+            // 透明度调节
+            opacitySlider.addEventListener('input', (e) => {
+                const opacity = parseFloat(e.target.value);
+                cameraPreview.style.opacity = opacity;
+            });
+
+            // 鼠标悬停显示控制面板
+            cameraPreview.addEventListener('mouseenter', () => {
+                previewControls.classList.add('visible');
+            });
+
+            cameraPreview.addEventListener('mouseleave', () => {
+                previewControls.classList.remove('visible');
+            });
 
             // 切换预览窗口显示/隐藏
             previewBtn.addEventListener('click', () => {
@@ -2067,12 +3008,14 @@
                     cameraPreview.style.right = '20px';
                     cameraPreview.style.bottom = '60px';
                     cameraPreview.style.transform = 'translateX(0)';
+                    cameraPreview.style.opacity = '1';
                     currentX = 0;
                     currentY = 0;
                 } else {
                     // 隐藏窗口
                     cameraPreview.classList.remove('visible', 'initial-position');
                     cameraPreview.style.transform = 'translateX(calc(100% + 40px))';
+                    cameraPreview.style.opacity = '0';
                 }
             });
 
@@ -2082,6 +3025,7 @@
                 isWindowVisible = false;
                 cameraPreview.classList.remove('visible', 'initial-position');
                 cameraPreview.style.transform = 'translateX(calc(100% + 40px))';
+                cameraPreview.style.opacity = '0';
             });
 
             // 拖动功能实现
@@ -2095,13 +3039,13 @@
             document.addEventListener('touchend', dragEnd);
 
             function dragStart(e) {
-                // 只有点击标题区域才开始拖动,不包括关闭按钮
+                // 只有点击标题区域才开始拖动,不包括按钮
                 if (e.target === closePreviewBtn || closePreviewBtn.contains(e.target)) {
                     return;
                 }
 
-                // 只有点击标题栏才能拖动
-                if (e.target !== previewTitle && e.target !== previewHeader) {
+                // 只有点击标题栏才能拖动（包括标题和空白区域）
+                if (!previewHeader.contains(e.target)) {
                     return;
                 }
 
@@ -2262,6 +3206,42 @@
             // 状态点引用
             const statusDot = document.getElementById('cam-status');
             statusDot.id = 'status-dot'; // rename specifically for JS usage
+
+            // 页面卸载时清理资源
+            window.addEventListener('beforeunload', () => {
+                console.log('页面即将卸载，清理资源...');
+                
+                // 停止MediaPipe处理
+                if (state.hands) {
+                    state.hands.close();
+                }
+                
+                // 停止视频流
+                if (state.videoElement && state.videoElement.srcObject) {
+                    const tracks = state.videoElement.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+                
+                if (state.previewVideoElement && state.previewVideoElement.srcObject) {
+                    const tracks = state.previewVideoElement.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+                
+                // 清理事件监听器
+                EventManager.removeAll();
+                
+                // 清理Three.js资源
+                if (state.renderer) {
+                    state.renderer.dispose();
+                }
+                
+                if (state.particles) {
+                    state.particles.geometry.dispose();
+                    state.particles.material.dispose();
+                }
+                
+                console.log('资源清理完成');
+            });
         });
 
     </script>
