@@ -6,7 +6,6 @@
 *Open your palm to spread particles, pinch fingers to gather particles*
 
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) 
-[![Preview](https://img.shields.io/badge/Preview-Open%20Demo-blue.svg)](https://1ecbd82c.pinit.eth.limo/) 
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
 [![Three.js](https://img.shields.io/badge/Three.js-r128-blue)](https://threejs.org/) 
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-Hands-green)](https://mediapipe.dev/solutions/hands)
@@ -45,7 +44,23 @@
 
 ---
 
-## 🚀 快速开始
+## �️ 在线预览
+
+<div align="center">
+
+<a href="https://1ecbd82c.pinit.eth.limo/" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🚀 立即体验 - 在线演示 -blue?style=for-the-badge&logo=world&logoColor=white" alt="立即体验在线演示">
+</a>
+
+<br>
+
+**点击上方按钮，立即体验手势控制3D粒子的神奇效果！**
+
+</div>
+
+---
+
+## �🚀 快速开始
 
 ### 环境要求
 

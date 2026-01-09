@@ -6,7 +6,6 @@
 *Open your palm to spread particles, pinch fingers to gather particles*
 
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) 
-[![Preview](https://img.shields.io/badge/Preview-Open%20Demo-blue.svg)](https://1ecbd82c.pinit.eth.limo/) 
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-yellow)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
 [![Three.js](https://img.shields.io/badge/Three.js-r128-blue)](https://threejs.org/) 
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-Hands-green)](https://mediapipe.dev/solutions/hands)
@@ -40,6 +39,22 @@ This project demonstrates how to combine AI gesture recognition technology with 
 ### ✨ Particle Animation Effect
 ![Particle Animation Effect](screenshot/2026-01-09_2134002.png)
 <em>Real-time particle animation with gesture control effect</em>
+
+</div>
+
+---
+
+## 👁️ Live Preview
+
+<div align="center">
+
+<a href="https://1ecbd82c.pinit.eth.limo/" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🚀 Try Now - Live Demo -blue?style=for-the-badge&logo=world&logoColor=white" alt="Try Now Live Demo">
+</a>
+
+<br>
+
+**Click the button above to experience the magic of gesture-controlled 3D particles!**
 
 </div>
 
